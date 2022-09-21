@@ -1,23 +1,39 @@
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import { setupCounter } from './counter'
+import { loadPage } from './layout/Dashboard'
+import { ListProfissao } from './components/list'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+const lista = new ListProfissao()
+// lista.addContent('leonardo', 24, 'programador')
+// lista.addContent('ferdinando', 22, 'programador')
+// lista.addContent('rodrigo', 23, 'engenheiro madeira')
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+console.log(lista.content)
+
+const app = document.querySelector('#app')
+if (app != null){
+  loadPage().then(component => { 
+    app.innerHTML = component
+
+    const botao = document.getElementById('botao')
+    const listEl = document.getElementById('list')
+    listEl?.appendChild(lista.content)
+
+    botao?.addEventListener('click', () => {
+
+      const inputs = document.querySelectorAll('.c1-input input') as NodeListOf<HTMLInputElement>
+
+      const name = inputs[0]
+      const age = inputs[1]
+      const profession = inputs[2]
+      
+      console.log(parseInt(age.value))
+      
+      if (name.value && parseInt(age.value) && profession.value) {
+        lista.addContent(name.value, parseInt(age.value), profession.value)
+        name.value = ''
+        age.value = ''
+        profession.value = ''
+      }
+    })
+  })
+}
